@@ -1,15 +1,17 @@
-import { signOut } from "next-auth/react";
+import { logOut } from "@/redux/feature/user/userReducer";
+import { useAppDispatch } from "@/redux/hooks";
 import Link from "next/link";
 import { MdHome } from "react-icons/md";
 
 
 const LogoutButton = () => {
+    const dispatch = useAppDispatch()
     return (
-        <div className="space-y-3">
+        <div className="space-y-3 text-black/90">
             <Link
                 href={"/"}
-                className={`flex items-center gap-3 text-slate-50 rounded px-3 py-2.5
-                                              transition-colors hover:bg-indigo-600 `}
+                className={`flex items-center gap-2   px-4 py-1.5
+                                              transition-colors duration-300 hover:text-white hover:bg-[#F42D43] `}
             >
                 <div className="flex items-center self-center">
                     <MdHome
@@ -21,8 +23,9 @@ const LogoutButton = () => {
                 </div>
             </Link>
             <button
-                onClick={() => signOut({ callbackUrl: '/login' })}
-                className="flex hover:bg-indigo-600 text-slate-50 w-full items-center gap-2 rounded px-3 py-2.5  transition-colors  "
+                onClick={() => dispatch(logOut())}
+                className="flex items-center gap-2   px-4 py-1.5
+                                              transition-colors duration-300 hover:text-white hover:bg-[#F42D43] w-full  "
             >
                 <div className="flex items-center self-center ">
                     <svg

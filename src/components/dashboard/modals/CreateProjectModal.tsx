@@ -43,6 +43,10 @@ export function CreateProjectModal({ handleCreate, setIsOpen, isOpen, isLoading 
                             <MainInput name="githubClient" label="Client (Optional)" type="url" />
                             <MainInput name="githubServer" label="Server (Optional)" type="url" />
                         </div>
+                        <div className="grid grid-cols-1 gap-3">
+                            <MainTextarea placeholder="separated by new line" name="coreFeatures" label="Core Features" />
+                            <MainTextarea placeholder="separated by comma or new line" name="technologies" label="Tech Stacks" />
+                        </div>
                         <MainTextarea name="description" label="Description" />
                     </div>
                     <DialogFooter>
@@ -50,7 +54,8 @@ export function CreateProjectModal({ handleCreate, setIsOpen, isOpen, isLoading 
                             Create Blog {isLoading && <ImSpinner2 size={20} className="animate-spin my-auto ml-2" />}
                         </Button>
                         <DialogClose asChild>
-                            <Button type="button" variant={"outline"} onClick={() => setIsOpen(false)}>
+                            <Button type="button" variant={"outline"} onClick={() => { }}
+                            >
                                 Cancel
                             </Button>
                         </DialogClose>

@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { IProject } from "@/components/types";
 import baseApi from "../baseApi";
 
 const projectApi = baseApi.injectEndpoints({
@@ -8,7 +9,7 @@ const projectApi = baseApi.injectEndpoints({
       transformResponse: (response: any) => response.data,
     }),
     createProject: builder.mutation({
-      query: (data: any) => ({
+      query: (data: IProject) => ({
         url: "/projects",
         method: "POST",
         body: data,

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { getCategoryColor, IBlog } from "@/components/types";
+import { getCategoryColor, IBlog, IUser } from "@/components/types";
 import Image from "next/image";
 import { BlogDeleteModal } from "../modals/BlogDeleteModal";
 import { useDeleteBlogMutation, useUpdateBlogMutation } from "@/redux/feature/blogs/blogApi";
@@ -8,11 +8,9 @@ import { UpdateBlogModal } from "../modals/UpdateBlogModal";
 import { FieldValues, SubmitHandler } from "react-hook-form";
 import { toast } from "sonner";
 
-import { Session } from "next-auth";
 
 
-
-const BlogTable = ({ blog, refetch, session }: { blog: IBlog, refetch: () => void, session: Session | null }) => {
+const BlogTable = ({ blog, refetch, user }: { blog: IBlog, refetch: () => void, user: IUser }) => {
 
     // console.log(session)
 
@@ -20,7 +18,7 @@ const BlogTable = ({ blog, refetch, session }: { blog: IBlog, refetch: () => voi
     const [updateModal] = useUpdateBlogMutation()
     const deleteHandler = async () => {
         const toastId = toast.loading("Deleting Blog...");
-        if (session?.user?.email !== blog?.author?.email) {
+        if (user?.email !== blog?.author?.email) {
             toast.error("You are not authorized to delete this blog", { id: toastId, duration: 3000 });
             return
         }
@@ -41,7 +39,7 @@ const BlogTable = ({ blog, refetch, session }: { blog: IBlog, refetch: () => voi
     const handleUpdate: SubmitHandler<FieldValues> = async (data) => {
         console.log('Hello World')
         const toastId = toast.loading("Updating Blog...");
-        if (session?.user?.email !== blog?.author?.email) {
+        if (user?.email !== blog?.author?.email) {
             toast.error("You are not authorized to update this blog", { id: toastId, duration: 3000 });
             return
         }

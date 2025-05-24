@@ -13,7 +13,8 @@ import { MdMessage } from "react-icons/md";
 import { VscProject } from "react-icons/vsc";
 import { usePathname } from "next/navigation"
 import { bebasNeue } from "../customFont"
-import { useSession } from "next-auth/react"
+import { useAppSelector } from "@/redux/hooks"
+import { selectUser } from "@/redux/feature/user/userReducer"
 
 
 const links = [
@@ -41,9 +42,13 @@ const links = [
 ]
 
 export default function Sidebar() {
-    const { data: session } = useSession()
+
+    const user = useAppSelector(selectUser)
+
+
     const [isSideNavOpen, setIsSideNavOpen] = useState(false)
     const pathname = usePathname()
+
     return (
         <div>
 
@@ -80,7 +85,7 @@ export default function Sidebar() {
             <aside
                 id="nav-menu-4"
                 aria-label="Side navigation"
-                className={`fixed top-0 bg-[#0A0A0A] bottom-0  left-0 z-40 flex w-64 flex-col border-r border-r-slate-200  text-white transition-transform lg:translate-x-0 ${isSideNavOpen ? "translate-x-0" : " -translate-x-full"
+                className={`fixed top-0 bg-white bottom-0  left-0 z-40 flex w-64 flex-col border-r border-r-slate-200  text-white transition-transform lg:translate-x-0 ${isSideNavOpen ? "translate-x-0" : " -translate-x-full"
                     }`}
             >
                 <div className="flex flex-col items-center gap-4 border-b border-slate-200 p-6">
@@ -90,7 +95,7 @@ export default function Sidebar() {
                             className="relative flex h-12 w-12 items-center justify-center rounded-full text-white"
                         >
                             <Image
-                                src={session?.user?.image as string}
+                                src={user?.image as string}
                                 // src="https://i.pravatar.cc/40?img=7"
                                 alt="user name"
                                 title="user name"
@@ -104,17 +109,17 @@ export default function Sidebar() {
                         </a>
                     </div>
                     <div className="flex min-h-[2rem] w-full min-w-0 flex-col items-start justify-center gap-0 text-center">
-                        <h4 className="w-full truncate text-base text-slate-200">
-                            {session?.user?.name}
+                        <h4 className="w-full truncate text-base text-slate-800">
+                            {user?.name}
                         </h4>
-                        <p className="w-full truncate text-sm text-slate-300">
-                            {session?.user?.email}
+                        <p className="w-full truncate text-sm text-slate-800">
+                            {user?.email}
                         </p>
                     </div>
                 </div>
                 <nav
                     aria-label="side navigation"
-                    className="flex-1 divide-y divide-slate-100 overflow-auto"
+                    className="flex-1 divide-y divide-slate-500 overflow-auto"
                 >
                     <div>
                         <ul className="flex  mt-2 flex-1 flex-col space-y-3 gap-1 py-3">
@@ -122,15 +127,15 @@ export default function Sidebar() {
                                 links.map((link, index) => <li key={index} className="px-3 ">
                                     <Link
                                         href={link.href}
-                                        className={`flex items-center gap-3 text-slate-50 rounded px-3 py-2.5
-                                              transition-colors hover:bg-primary ${link.href === pathname ? "bg-indigo-500" : "bg-transparent"} ${bebasNeue.className}`}
+                                        className={`flex items-center gap-2   px-4 py-1.5
+                                              transition-colors duration-300 hover:text-white hover:bg-[#F42D43] ${link.href === pathname ? "bg-[#F42D43] text-white" : "bg-transparent text-black"} ${bebasNeue.className}`}
                                     >
                                         <div className="flex items-center self-center">
                                             <link.icon
                                                 className="h-6 w-6"
                                             />
                                         </div>
-                                        <div className="flex w-full flex-1 flex-col items-start justify-center gap-0 overflow-hidden font-medium  truncate text-sm">
+                                        <div className="flex w-full flex-1 flex-col items-start justify-center gap-0 overflow-hidden font-medium  truncate ">
                                             {link.title}
                                         </div>
                                     </Link>

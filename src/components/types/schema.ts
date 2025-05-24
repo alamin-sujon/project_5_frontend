@@ -17,7 +17,8 @@ export const projectSchema = z.object({
   description: z.string().min(1, "Description is required"),
   image: z.string().url("Invalid image URL"),
   liveUrl: z.string().url("Invalid URL"),
-  // coreFeature: z.array(z.string()),
+  coreFeatures: z.string(),
+  technologies: z.string(),
   githubClient: z.string().optional(),
   githubServer: z.string().optional(),
 });

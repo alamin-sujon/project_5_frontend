@@ -7,16 +7,18 @@ import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import { useGetBlogsQuery } from '@/redux/feature/blogs/blogApi';
 import { useGetAllMessageQuery } from '@/redux/feature/messages/messageApi';
 import { useGetprojectsQuery } from '@/redux/feature/projects/projectApi';
+import { selectUser } from '@/redux/feature/user/userReducer';
+import { useAppSelector } from '@/redux/hooks';
 import TableSkeleton from '@/utils/loading/TableSkeleton';
 
-import { useSession } from 'next-auth/react';
+// import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import React, { useMemo } from 'react';
 
 
 const DashboardPage = () => {
-    const { data: session } = useSession();
-
+    // const { data: session } = useSession();
+    const user = useAppSelector(selectUser)
 
     const { data: messages } = useGetAllMessageQuery(null);
     const { data: projects, refetch: projectRefetch, isLoading: projectLoading } = useGetprojectsQuery(null)
@@ -24,16 +26,16 @@ const DashboardPage = () => {
 
 
     // Projects
-    const projectList = useMemo(() => projects?.slice(0, 3)?.map((project: IProject) => <ProjectTable key={project?._id} session={session} refetch={projectRefetch} project={project} />), [projects, projectRefetch, session]);
+    const projectList = useMemo(() => projects?.slice(0, 3)?.map((project: IProject) => <ProjectTable key={project?._id} user={user!} refetch={projectRefetch} project={project} />), [projects, projectRefetch, user]);
 
     // Blogs
     const blogList = useMemo(
-        () => blogs?.slice(0, 3)?.map((blog: IBlog) => <BlogTable session={session} refetch={blogRefetch} key={blog?._id} blog={blog} />),
-        [blogs, session, blogRefetch]
+        () => blogs?.slice(0, 3)?.map((blog: IBlog) => <BlogTable user={user!} refetch={blogRefetch} key={blog?._id} blog={blog} />),
+        [blogs, user, blogRefetch]
     );
 
     return (
-        <div className=''>
+        <div className='bg-white'>
             <div className=' mb-6'>
                 <h1 className="text-2xl font-semibold text-gray-800 dark:text-white">Dashboard Overview</h1>
 

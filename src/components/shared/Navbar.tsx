@@ -1,6 +1,7 @@
 "use client"
 
-import { signOut, useSession } from "next-auth/react";
+import { logOut, selectUser } from "@/redux/feature/user/userReducer";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -18,8 +19,10 @@ const navLinks = [
 
 const Navbar = () => {
     const pathname = usePathname()
-    const { data: session } = useSession()
+    // const { data: session } = useSession()
+    const user = useAppSelector(selectUser)
     console.log(pathname);
+    const dispatch = useAppDispatch()
     const [isOpen, setIsOpen] = useState(false);
     return (
         <nav className=" w-full py-1 relative bg-transparent dark:bg-gray-800  ">
@@ -78,13 +81,13 @@ const Navbar = () => {
                     >
                         <div className="flex flex-col -mx-6 lg:flex-row lg:items-center lg:mx-8">
                             {
-                                navLinks.map(el => <Link key={el.path} href={el.path} className={`px-3 py-1.5 mx-3  transition-colors duration-300 transform  lg:mt-0 text-black lg:text-white dark:text-gray-200 hover:bg-[#31ffcc] dark:hover:bg-gray-700 ${pathname === el.path && 'bg-[#31ffcc] opacity-95  '}`}>
+                                navLinks.map(el => <Link key={el.path} href={el.path} className={`px-3 py-1.5 mx-3  transition-colors duration-300 transform  lg:mt-0 text-black lg:text-white dark:text-gray-200 border border-transparent hover:bg+-[#31ffcc] dark:hover:bg-gray-700 ${pathname === el.path && 'border-[#31ffcc] opacity-95 text-[#31ffcc] dark:text-[#31ffcc] bg-[#31ffcc] dark:bg-gray-700'}`}>
                                     {el.name}
                                 </Link>)
 
                             }
                             {
-                                session?.user && <Link className="ml-4 py-1.5  hover:bg-[#31ffcc] px-3 text-white " href={'/dashboard'}>
+                                user && <Link className="ml-4 py-1.5  hover:bg-[#31ffcc] px-3 text-white " href={'/dashboard'}>
                                     Dashboard
                                 </Link>
                             }
@@ -118,21 +121,21 @@ const Navbar = () => {
                             </svg>
                         </label>
                         {
-                            session ? <div className="dropdown dropdown-end">
+                            user?.email ? <div className="dropdown dropdown-end">
                                 <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
                                     <div className="w-10 rounded-full">
-                                        <Image src={session?.user?.image || '/avatar.png'} alt="avatar" width={40} height={40} />
+                                        <Image src={user?.image || '/avatar.png'} alt="avatar" width={40} height={40} />
 
                                     </div>
                                 </div>
                                 <ul
                                     tabIndex={0}
-                                    className="menu menu-sm dropdown-content bg-base-100 rounded-box shadow-xl border z-[1] mt-3 w-52 p-2 ">
-                                    <Link href={'/dashboard'} className="btn btn-sm mb-2">Dashboard</Link>
-                                    <li onClick={() => signOut({ callbackUrl: '/' })}><a className="btn btn-sm dark:text-white">Logout</a></li>
+                                    className="menu menu-sm dropdown-content  rounded-box text-white shadow-xl border z-[1] mt-3 w-52 ">
+                                    <Link href={'/dashboard'} className="py-2 px-4 bg-black text-white hover:bg-white hover:text-black rounded-sm transition-colors duration-500">Dashboard</Link>
+                                    <li onClick={() => dispatch(logOut())}><a className=" py-2 px-4 bg-black text-white hover:bg-white hover:text-black rounded-sm transition-colors duration-500">Logout</a></li>
                                 </ul>
                             </div> : <Link href={'/login'}
-                                className="relative py-1.5 px-4 border border-[#31ffcc] text-[#31ffcc] overflow-hidden
+                                className="relative hidden py-1.5 px-4 border border-[#31ffcc] text-[#31ffcc] overflow-hidden
                        before:absolute before:top-0 before:left-0 before:w-0 before:h-full before:bg-[#31ffcc]
                        before:transition-all before:duration-500 hover:before:w-full hover:text-black"
                             >

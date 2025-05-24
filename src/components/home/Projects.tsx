@@ -1,12 +1,13 @@
-import ProjectCard from '@/components/ProjectCard';
+// import ProjectCard from '@/components/ProjectCard';
 import { IProject } from '@/components/types';
 import { Metadata } from 'next';
 import React from 'react';
+import ProjectCard from './ProjectCard';
 export const metadata: Metadata = {
     title: 'Projects'
 }
 const Project = async () => {
-    const res = await fetch(`${process.env.API_URL}/projects`, { next: { revalidate: 30 } })
+    const res = await fetch(`${process.env.API_URL}/projects`, { next: { revalidate: 600 } })
     const { data: projects } = await res.json()
 
     return (

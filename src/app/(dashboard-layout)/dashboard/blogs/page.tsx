@@ -6,22 +6,28 @@ import BlogTable from '@/components/dashboard/tables/BlogTable';
 import { IBlog } from '@/components/types';
 
 import { useCreateBlogMutation, useGetBlogsQuery } from '@/redux/feature/blogs/blogApi';
+import { selectUser } from '@/redux/feature/user/userReducer';
+import { useAppSelector } from '@/redux/hooks';
 import TableSkeleton from '@/utils/loading/TableSkeleton';
-import { useSession } from 'next-auth/react';
+// import { useSession } from 'next-auth/react';
 import React, { useMemo, useState } from 'react';
 import { FieldValues, SubmitHandler } from 'react-hook-form';
 import { toast } from 'sonner';
 
 const BlogsManagement = () => {
     const { data: blogs, isLoading, refetch } = useGetBlogsQuery(null)
-    const { data: session } = useSession();
+    const user = useAppSelector(selectUser)
     const [createBlog, { isLoading: createBlogLoading }] = useCreateBlogMutation();
     const [isOpen, setIsOpen] = useState(false)
     const handleCreate: SubmitHandler<FieldValues> = async (data) => {
 
         try {
-            const author = { name: session?.user?.name, email: session?.user?.email, avatar: session?.user?.image }
-            data.author = author
+            // const author = { name: session?.user?.name, email: session?.user?.email, avatar: session?.user?.image }
+            data.author = {
+                name: user?.name,
+                email: user?.email,
+                avatar: user?.image
+            }
             const result = await createBlog(data).unwrap();
             if (result) {
                 toast.success(result?.message, { duration: 2000 });
@@ -38,8 +44,8 @@ const BlogsManagement = () => {
 
 
     const blogList = useMemo(
-        () => blogs?.map((blog: IBlog) => <BlogTable session={session} refetch={refetch} key={blog?._id} blog={blog} />),
-        [blogs, session, refetch]
+        () => blogs?.map((blog: IBlog) => <BlogTable user={user!} refetch={refetch} key={blog?._id} blog={blog} />),
+        [blogs, user, refetch]
     );
 
 

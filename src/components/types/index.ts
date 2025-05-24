@@ -9,7 +9,8 @@ export interface IProject {
     email: string;
   };
   description: string;
-  coreFeature: string[];
+  coreFeatures: string[];
+  technologies: string[];
   githubClient?: string;
   githubServer?: string;
   createdAt: string;
@@ -37,6 +38,17 @@ export interface ISessionUser {
   name: string;
   email: string;
   image: string;
+}
+
+export interface IUser {
+  _id: string;
+  name: string;
+  email: string;
+  password: string;
+  role: string;
+  image: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export const categories = [

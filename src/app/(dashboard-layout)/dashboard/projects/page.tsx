@@ -5,31 +5,41 @@ import { CreateProjectModal } from '@/components/dashboard/modals/CreateProjectM
 import ProjectTable from '@/components/dashboard/tables/ProjectTable';
 import { IProject } from '@/components/types';
 import { useCreateProjectMutation, useGetprojectsQuery } from '@/redux/feature/projects/projectApi';
+import { selectUser } from '@/redux/feature/user/userReducer';
+import { useAppSelector } from '@/redux/hooks';
 import TableSkeleton from '@/utils/loading/TableSkeleton';
-import { useSession } from 'next-auth/react';
 import React, { useMemo, useState } from 'react';
 import { FieldValues, SubmitHandler } from 'react-hook-form';
 import { toast } from 'sonner';
 
 const ProjectsManagement = () => {
     const { data: projects, isLoading, refetch } = useGetprojectsQuery(null)
-    // console.log({ projects, isLoading })
     const [createProject, { isLoading: createProjectLoading }] = useCreateProjectMutation()
-    const { data: session } = useSession();
+    const user = useAppSelector(selectUser)
     const [isOpen, setIsOpen] = useState(false)
-    const projectList = useMemo(() => projects?.map((project: IProject) => <ProjectTable key={project?._id} session={session} refetch={refetch} project={project} />), [projects, refetch, session]);
+    const projectList = useMemo(() => projects?.map((project: IProject) => <ProjectTable key={project?._id} user={user!} refetch={refetch} project={project} />), [projects, refetch, user]);
 
     const handleCreate: SubmitHandler<FieldValues> = async (data) => {
 
         try {
             const author = {
-                name: session?.user?.name,
-                email: session?.user?.email,
-                avatar: session?.user?.image
+                name: user?.name,
+                email: user?.email,
+                avatar: user?.image
             }
             data.author = author
-            const result = await createProject(data).unwrap();
-            console.log(result)
+            data.technologies = data.technologies
+                .split(/[\n,]+/)          // split by newline OR comma
+                .map((item: string) => item.trim()) // remove extra spaces
+                .filter(Boolean);
+            data.coreFeatures = data.coreFeatures
+                .split('\n')               // split by newline only
+                .map((item: string) => item.trim())  // trim spaces
+                .filter(Boolean);
+            console.log({ data })
+
+            const result = await createProject(data as IProject).unwrap();
+
             if (result.success) {
                 toast.success(result?.message || 'Project created successfully', { duration: 2000 })
                 refetch()

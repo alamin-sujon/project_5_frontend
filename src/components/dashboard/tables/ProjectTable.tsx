@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { IProject } from "@/components/types";
+import { IProject, IUser } from "@/components/types";
 import Image from "next/image";
 import Link from "next/link";
 import { BlogDeleteModal } from "../modals/BlogDeleteModal";
@@ -7,11 +7,10 @@ import { useDeleteProjectMutation, useUpdateProjectMutation } from "@/redux/feat
 import { toast } from "sonner";
 import { UpdateProjectModal } from "../modals/UpdateprojectModal";
 import { FieldValues, SubmitHandler } from "react-hook-form";
-import { Session } from "next-auth";
 
 
-const ProjectTable = ({ project, refetch, session }: { project: IProject, refetch: () => void, session: Session | null }) => {
-    console.log(session)
+const ProjectTable = ({ project, refetch, user }: { project: IProject, refetch: () => void, user: IUser }) => {
+
 
     const [deleteProject] = useDeleteProjectMutation();
     const [updateProject] = useUpdateProjectMutation()
@@ -20,7 +19,7 @@ const ProjectTable = ({ project, refetch, session }: { project: IProject, refetc
         const toastId = toast.loading("Deleting Project...");
 
         try {
-            if (session?.user?.email !== project?.author?.email) {
+            if (user?.email !== project?.author?.email) {
                 toast.error("You are not authorized to delete this project", { id: toastId, duration: 3000 });
                 return
             }
@@ -41,7 +40,7 @@ const ProjectTable = ({ project, refetch, session }: { project: IProject, refetc
     const handleUpdate: SubmitHandler<FieldValues> = async (data) => {
         const toastId = toast.loading("Updating Project...");
         try {
-            if (session?.user?.email !== project?.author?.email) {
+            if (user?.email !== project?.author?.email) {
                 toast.error("You are not authorized to delete this project", { id: toastId, duration: 3000 });
                 return
             }

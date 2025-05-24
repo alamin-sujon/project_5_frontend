@@ -1,4 +1,5 @@
-import ProjectCard from '@/components/ProjectCard';
+// import ProjectCard from '@/components/ProjectCard';
+import ProjectCard from '@/components/home/ProjectCard';
 import { IProject } from '@/components/types';
 import { Metadata } from 'next';
 import React from 'react';
@@ -7,7 +8,7 @@ export const metadata: Metadata = {
 }
 const ProjectPage = async () => {
     const res = await fetch(`${process.env.API_URL}/projects`, { cache: 'no-store' })
-    const { data: projects } = await res.json()
+    const { data: projects } = await res.json() as { data: IProject[] }
 
     return (
         <div>

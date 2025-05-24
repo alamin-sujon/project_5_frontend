@@ -6,7 +6,7 @@ const DownloadButton = () => {
 
 
         <motion.a
-            href="/Alamin_Mern_Developer.pdf" // Change this to your actual resume file path
+            href="/Alamin_Full_Stack.pdf" // Change this to your actual resume file path
             download
 
             className="relative py-2 px-4 border border-[#31ffcc] bg-[#31ffcc] text-black overflow-hidden

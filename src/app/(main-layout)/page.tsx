@@ -15,6 +15,7 @@ export default async function Home() {
       <Banner />
       <About />
       <Project />
+      {/* <ProjectsSection /> */}
       <Skills />
       <Education />
       <FunFacts />
